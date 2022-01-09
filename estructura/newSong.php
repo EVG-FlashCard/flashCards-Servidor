@@ -1,7 +1,10 @@
 <?php
+    /**
+     * Interfaz básica que agrega una nueva canción.
+     */
 
     echo '
-    <form action="../audio.php" method="POST">
+    <form action="../procesos/insertSong.php" method="POST">
         <label>Título canción</label>
         <input name="title" type="text">
         <label>Nombre autor</label>

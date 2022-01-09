@@ -25,8 +25,7 @@
             $consulta = $this->consultar($sql);
             if($consulta) 
                 return $consulta;
-            else
-                return $this->mysql->error;
+            return $this->mysql->error;
 
         }
 
@@ -41,8 +40,7 @@
             $consulta = $this->consultar($sql);
             if($consulta)
                 return $this->mysql->insert_id; //Devolvemos la id.
-            else
-                return $this->mysql->errno;
+            return $this->mysql->errno;
         }
 
         /**
@@ -67,9 +65,35 @@
             $consulta = $this->consultar($sql);
             if($consulta)
                 return 'Datos modificados correctamente';
-            else
-                return $this->mysql->errno;
+            return $this->mysql->errno;
 
+        }
+
+        /**
+         * Modifica una puntuacion
+        */
+        function modificarAudio($title, $authorName, $id) {
+            $sql = "UPDATE audio SET titulo='$title', nombreAutor='$authorName' WHERE idAudio=$id";
+
+            $consulta = $this->consultar($sql);
+            if($consulta)
+                return 'Datos modificados correctamente';
+            return $this->mysql->errno;
+
+        }
+
+        /**
+         * Borra datos de la B.D
+         * @param tabla -> tabla a borrar datos
+         * @param condicion -> Condición, id u otro parametro a identificar el dato que borrar.
+         */
+        function borrarDatos($tabla, $condicion) {
+            $sql = "DELETE FROM $tabla WHERE $condicion";
+
+
+            $consulta = $this->consultar($sql);
+
+            if(!$consulta) return $this->mysql->errno;
         }
     }
 ?>

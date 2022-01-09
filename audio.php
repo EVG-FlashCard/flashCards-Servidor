@@ -14,37 +14,20 @@
 
     $selAudios = $db->seleccionar("SELECT * FROM audio");
 
-    //$filas = $db->selectArray($selAudios, MYSQLI_ASSOC);
-
-    echo '<tr>';
-
     while($filas = $db->selectArray($selAudios, MYSQLI_ASSOC)) {
-        //echo "<td>".$filas["idAudio"] ."</td>";
+        echo '<tr>';
+
         echo "<td>".$filas["titulo"] ."</td>";
         echo "<td>".$filas["nombreAutor"] ."</td>";
-        echo "<td><a href='?editar=$filas[idAudio]'>Editar</a>"."</td>";
-        echo "<td><a href='?borrar=$filas[idAudio]'>Borrar</a>"."</td>";
-    }
-    echo '</tr></table>';
+        echo "<td><a href='estructura/editSong.php?editar=$filas[idAudio]'>Editar</a>";
+        echo " <a href='procesos/borrarSong.php?id=$filas[idAudio]'>Borrar</a>"."</td>";
 
-
-    if(isset($_POST["enviar"])) {
-        echo 'llega Titulo '.$_POST["title"];
-        
+        echo '</tr>';
     }
-
-    
-    if(isset($_GET["editar"])) {
-        echo $_GET["editar"];
-    }
-
-    if(isset($_GET["borrar"])) {
-        echo $_GET["borrar"];
-    }
+    echo '</table>';
 
     //Agregar una nueva canción
     echo '<a href="estructura/newSong.php">Nueva canción</a>';
-
 
 
 ?>
@@ -55,6 +38,7 @@
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>Gestión audio</title>
+        <link rel="stylesheet" href="css/audioCrud.css">
     </head>
     <body>
         
