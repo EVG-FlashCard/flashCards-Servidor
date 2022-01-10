@@ -31,6 +31,13 @@
             return $this->mysql->query($consulta);
         }
 
+        /*
+            Prepara una consulta
+        */
+        function prepararConsulta($consulta) {
+            return $this->mysql->prepare($consulta);
+        }
+
         /**
          * Devuelve el numero de filas
          */

@@ -30,17 +30,43 @@
         }
 
         /**
+         * Selecciona lo especificado por el sistema.
+         * @param customSQL Permite introducir nombres de columna
+         * @param where Parametro que permite introducir un WHERE statement.
+        */
+        function loginAccount($user,$pass) {
+
+            //SQL custom especificado en param
+            $sql = "SELECT * FROM usuarios WHERE nombre=? AND pw=? LIMIT 1";
+
+            $consulta = $this->prepararConsulta($sql);
+            $consulta->bind_param("ss",$user,$pass);
+
+
+            if($consulta->execute()) echo $this->mysql->error;
+
+            //Cerramos la consulta y la devolvemos
+            $consulta->close();
+            return $consulta;
+
+
+        }
+
+        /**
          * Inserta los datos de una nueva puntuación
         */
         function crearCuenta($nombre,$apellido,$correo,$pw,$tipoPerfil=0) {
 
-            $sql = "INSERT INTO usuarios(nombre,apellido,correo,pw) VALUES ('$nombre','$apellido', '$correo', '$pw');";
+            $sql = "INSERT INTO usuarios(nombre,apellido,correo,pw) VALUES (?, ?, ?, ?);";
             //INSERT INTO usuarios(nombre,apellido,correo,pw) VALUES ('aa', 'ee', 'ee', '1234');
 
-            $consulta = $this->consultar($sql);
-            if($consulta)
-                return $this->mysql->insert_id; //Devolvemos la id.
-            return $this->mysql->errno;
+            $consulta = $this->prepararConsulta($sql);
+            $consulta->bind_param("ssss", $nombre, $apellido, $correo, $pw);
+            if(!$consulta->execute()) return $this->mysql->errno;
+
+            //Cerramos la consulta preparada
+            $consulta->close();
+            return $this->mysql->insert_id; //Devolvemos la id.
         }
 
         /**

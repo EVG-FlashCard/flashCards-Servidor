@@ -45,7 +45,7 @@
                     $db = new Procesos();
 
                     $insertDatos = $db->crearCuenta($user, $surname, $email, $pw);
-                    //echo $insertDatos;
+                    echo $insertDatos;
 
                     //Comprobaciones...
                     if($insertDatos == 1062) {
@@ -64,7 +64,7 @@
 
                         //Reedirigimos a la página principal.
                         //header("Location: index.php");
-                        header("Location: estructura/preferencias.php");
+                        //header("Location: estructura/preferencias.php");
                     }
                 } else {
                     echo '
