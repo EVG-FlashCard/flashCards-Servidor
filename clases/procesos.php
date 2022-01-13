@@ -37,7 +37,7 @@
         function loginAccount($user,$pass) {
 
             //SQL custom especificado en param
-            $sql = "SELECT * FROM usuarios WHERE nombre=? AND pw=? LIMIT 1";
+            $sql = "SELECT nombre, pw, idUsuario FROM usuarios WHERE nombre=? AND pw=? LIMIT 1";
 
             $consulta = $this->prepararConsulta($sql);
             $consulta->bind_param("ss",$user,$pass);
@@ -45,11 +45,30 @@
 
             if($consulta->execute()) echo $this->mysql->error;
 
-            //Cerramos la consulta y la devolvemos
+
+            //Definición de variables 
+            $nombre = "";
+            $pw = "";
+            $idUsuario = "";
+            $tipoPerfil = "";
+
+            //El bind result funcionará mejor para consultas sin *
+            $consulta->bind_result($nombre, $pw, $idUsuario);
+
+            if($consulta->fetch()) {
+
+                session_start();
+                $_SESSION["id"] = $idUsuario;
+                $_SESSION["userName"] = $user;
+                //$_SESSION["tipoPerfil"] = $filaLogin["tipoPerfil"];
+                $_SESSION["firstLogin"] = false;
+
+                //Cerramos la consulta
+                $consulta->close();
+                return true;
+            }
             $consulta->close();
-            return $consulta;
-
-
+            return false;
         }
 
         /**

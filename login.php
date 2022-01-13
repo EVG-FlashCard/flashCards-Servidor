@@ -13,9 +13,12 @@
 
             $db = new Procesos();
 
-            $resultLogin = $db->seleccionar("SELECT * FROM usuarios WHERE nombre='$user' AND pw='$pw' LIMIT 1");
+            $resultLogin = $db->loginAccount($user, $pw);
 
-            $filaLogin = $db->selectArray($resultLogin,MYSQLI_ASSOC);
+            if($resultLogin) header("Location: index.php");
+            else echo 'Usuario o contraseña incorrectos';
+
+            /*$filaLogin = $db->selectArray($resultLogin,MYSQLI_ASSOC);
 
             if($db->num_Filas($resultLogin) > 0) {
                 session_start();
@@ -27,7 +30,7 @@
                 header("Location: index.php");
             } else {
                 echo 'Usuario o contraseña incorrectos';
-            }
+            }*/
         }
     }
 ?>
