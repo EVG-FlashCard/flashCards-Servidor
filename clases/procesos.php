@@ -37,10 +37,10 @@
         function loginAccount($user,$pass) {
 
             //SQL custom especificado en param
-            $sql = "SELECT nombre, pw, idUsuario FROM usuarios WHERE nombre=? AND pw=? LIMIT 1";
+            $sql = "SELECT nombre, pw, idUsuario FROM usuarios WHERE nombre=? LIMIT 1";
 
             $consulta = $this->prepararConsulta($sql);
-            $consulta->bind_param("ss",$user,$pass);
+            $consulta->bind_param("s", $user);
 
 
             if($consulta->execute()) echo $this->mysql->error;
@@ -48,15 +48,21 @@
 
             //Definición de variables 
             $nombre = "";
-            $pw = "";
+            $pwHashed = "";
             $idUsuario = "";
-            $tipoPerfil = "";
+            //$tipoPerfil = "";
+
 
             //El bind result funcionará mejor para consultas sin *
-            $consulta->bind_result($nombre, $pw, $idUsuario);
+            $consulta->bind_result($nombre, $pwHashed, $idUsuario);
+            $consulta->fetch();
 
-            if($consulta->fetch()) {
+            //$fila = $consulta->fetch();
 
+            $pwHash = password_verify($pass, $pwHashed);
+
+            //if($consulta->num_rows > 0)
+            if($pwHash) {
                 session_start();
                 $_SESSION["id"] = $idUsuario;
                 $_SESSION["userName"] = $user;
@@ -80,7 +86,10 @@
             //INSERT INTO usuarios(nombre,apellido,correo,pw) VALUES ('aa', 'ee', 'ee', '1234');
 
             $consulta = $this->prepararConsulta($sql);
-            $consulta->bind_param("ssss", $nombre, $apellido, $correo, $pw);
+
+            $pwHash = password_hash($pw, PASSWORD_DEFAULT);
+
+            $consulta->bind_param("ssss", $nombre, $apellido, $correo, $pwHash);
             if(!$consulta->execute()) return $this->mysql->errno;
 
             //Cerramos la consulta preparada

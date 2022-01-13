@@ -45,7 +45,7 @@
                     $db = new Procesos();
 
                     $insertDatos = $db->crearCuenta($user, $surname, $email, $pw);
-                    echo $insertDatos;
+                    //echo $insertDatos;
 
                     //Comprobaciones...
                     if($insertDatos == 1062) {
