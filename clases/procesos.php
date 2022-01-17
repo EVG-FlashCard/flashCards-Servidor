@@ -37,41 +37,34 @@
         function loginAccount($user,$pass) {
 
             //SQL custom especificado en param
-            $sql = "SELECT nombre, pw, idUsuario FROM usuarios WHERE nombre=? LIMIT 1";
+            $sql = "SELECT * FROM usuarios WHERE nombre=? LIMIT 1";
 
             $consulta = $this->prepararConsulta($sql);
             $consulta->bind_param("s", $user);
 
-
             if($consulta->execute()) echo $this->mysql->error;
 
+            //El get result funcionará con *
+            $resultado = $consulta->get_result();
 
-            //Definición de variables 
-            $nombre = "";
-            $pwHashed = "";
-            $idUsuario = "";
-            //$tipoPerfil = "";
+            $fila = $resultado->fetch_assoc();
 
+            //Si hay resultados...
+            if($resultado->num_rows > 0) {
 
-            //El bind result funcionará mejor para consultas sin *
-            $consulta->bind_result($nombre, $pwHashed, $idUsuario);
-            $consulta->fetch();
+                $pwHash = password_verify($pass, $fila["pw"]);
 
-            //$fila = $consulta->fetch();
+                if($pwHash) {
+                    session_start();
+                    $_SESSION["id"] = $fila["idUsuario"];
+                    $_SESSION["userName"] = $fila["nombre"];
+                    //$_SESSION["tipoPerfil"] = $filaLogin["tipoPerfil"];
+                    $_SESSION["firstLogin"] = false;
 
-            $pwHash = password_verify($pass, $pwHashed);
-
-            //if($consulta->num_rows > 0)
-            if($pwHash) {
-                session_start();
-                $_SESSION["id"] = $idUsuario;
-                $_SESSION["userName"] = $user;
-                //$_SESSION["tipoPerfil"] = $filaLogin["tipoPerfil"];
-                $_SESSION["firstLogin"] = false;
-
-                //Cerramos la consulta
-                $consulta->close();
-                return true;
+                    //Cerramos la consulta
+                    $consulta->close();
+                    return true;
+                }
             }
             $consulta->close();
             return false;
