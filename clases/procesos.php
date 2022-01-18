@@ -37,7 +37,7 @@
         function loginAccount($user,$pass) {
 
             //SQL custom especificado en param
-            $sql = "SELECT * FROM usuarios WHERE nombre=? LIMIT 1";
+            $sql = "SELECT nombre, pw, idUsuario FROM usuarios WHERE nombre=? LIMIT 1";
 
             $consulta = $this->prepararConsulta($sql);
             $consulta->bind_param("s", $user);
@@ -59,7 +59,6 @@
                     $_SESSION["id"] = $fila["idUsuario"];
                     $_SESSION["userName"] = $fila["nombre"];
                     //$_SESSION["tipoPerfil"] = $filaLogin["tipoPerfil"];
-                    $_SESSION["firstLogin"] = false;
 
                     //Cerramos la consulta
                     $consulta->close();
